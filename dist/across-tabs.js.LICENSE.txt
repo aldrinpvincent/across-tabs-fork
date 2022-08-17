@@ -7,12 +7,3 @@
  * Copyright (C) 2017-2019 Wingify Pvt. Ltd. - Authored by Varun Malhotra(https://github.com/softvar)
  *
  */
-
-/**
- * UUID.js: The RFC-compliant UUID generator for JavaScript.
- * ES6 port of only `generate` method of UUID by Varun Malhotra under MIT License
- *
- * @author  LiosK
- * @version v3.3.0
- * @license The MIT License: Copyright (c) 2010-2016 LiosK.
- */

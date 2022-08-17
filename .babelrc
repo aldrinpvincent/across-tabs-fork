@@ -1,4 +1,3 @@
 {
-  "presets": ["env"],
-  "plugins": ["babel-plugin-add-module-exports", "transform-object-assign"],
+  "presets": ["@babel/preset-env"]
 }

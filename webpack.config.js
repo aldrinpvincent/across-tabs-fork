@@ -42,6 +42,15 @@ module.exports = {
       name: 'AcrossTabs',
       type: 'umd'
     }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js)$/,
+        exclude: /node_modules/,
+        use: 'babel-loader'
+      }
+    ]
   }
 };
 // if (env === 'build') {
