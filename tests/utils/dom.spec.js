@@ -1,15 +1,18 @@
+/**
+ * @jest-environment jsdom
+ */
 import domUtils from '../../src/utils/dom';
 
 describe('domUtils', () => {
   // inject the HTML elem for the tests
-  beforeEach(function() {
+  beforeEach(function () {
     let elem = '<div id="elem">' + '<a data-tab-opener="parent" href="/about">Open Link</a>' + '/div>';
 
     document.body.insertAdjacentHTML('afterbegin', elem);
   });
 
   // remove the html elem from the DOM
-  afterEach(function() {
+  afterEach(function () {
     document.body.removeChild(document.getElementById('elem'));
   });
   describe('Basic tests', () => {

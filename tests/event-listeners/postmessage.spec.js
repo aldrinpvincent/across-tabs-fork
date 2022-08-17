@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import tabUtils from '../../src/utils/tab';
 import arrayUtils from '../../src/utils/array';
 import WarningTextEnum from '../../src/enums/WarningTextEnum';
@@ -62,13 +66,13 @@ describe('PostMessageListener', () => {
       expect(window.newlyTabOpened.name).not.toBeDefined();
     });
     it('should send a msg to child', () => {
-      let spy = jasmine.createSpy('message');
+      let spy = jest.fn();
 
       // postMessage runs asynchronously, verify after the message has been posted and after the event has been fired off.
       window.addEventListener('message', e => {
         spy();
       });
-      spyOn(tabUtils, 'sendMessage');
+      jest.spyOn(tabUtils, 'sendMessage').mockImplementation(() => { });
       PostMessageListener._onLoad(
         PostMessageEventNamesEnum.LOADED + JSON.stringify({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' })
       );
@@ -79,10 +83,10 @@ describe('PostMessageListener', () => {
     it('should verify that correct event has been dispatched on receiving data', () => {
       unSetNewTabInfo();
       let eventDetailData = {
-          key: 'value'
-        },
+        key: 'value'
+      },
         data = PostMessageEventNamesEnum.HANDSHAKE + JSON.stringify(eventDetailData),
-        eventSpy = jasmine.createSpy();
+        eventSpy = jest.fn();
 
       window.addEventListener('onCustomChildMessage', eventSpy);
       PostMessageListener._onCustomMessage(data, PostMessageEventNamesEnum.HANDSHAKE);
@@ -95,7 +99,7 @@ describe('PostMessageListener', () => {
       let data =
         PostMessageEventNamesEnum.ON_BEFORE_UNLOAD + JSON.stringify({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' });
 
-      spyOn(arrayUtils, 'searchByKeyName');
+      jest.spyOn(arrayUtils, 'searchByKeyName').mockImplementation(() => { });
       PostMessageListener._onBeforeUnload(data);
       expect(arrayUtils.searchByKeyName).not.toHaveBeenCalled();
     });
@@ -105,7 +109,7 @@ describe('PostMessageListener', () => {
 
       tabUtils.tabs.push({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' });
 
-      spyOn(arrayUtils, 'searchByKeyName');
+      jest.spyOn(arrayUtils, 'searchByKeyName').mockImplementation(() => { });
       PostMessageListener._onBeforeUnload(data);
       expect(arrayUtils.searchByKeyName).toHaveBeenCalled();
     });
@@ -133,7 +137,7 @@ describe('PostMessageListener', () => {
         data: PostMessageEventNamesEnum.LOADED
       };
 
-      spyOn(PostMessageListener, '_onLoad');
+      jest.spyOn(PostMessageListener, '_onLoad').mockImplementation(() => { });
       tabUtils.tabs.push({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' });
       PostMessageListener.onNewTab(message);
 
@@ -144,7 +148,7 @@ describe('PostMessageListener', () => {
         data: PostMessageEventNamesEnum.CUSTOM + JSON.stringify({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' })
       };
 
-      spyOn(PostMessageListener, '_onCustomMessage');
+      jest.spyOn(PostMessageListener, '_onCustomMessage').mockImplementation(() => { });
       tabUtils.tabs.push({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' });
       PostMessageListener.onNewTab(message);
 
@@ -155,7 +159,7 @@ describe('PostMessageListener', () => {
         data: PostMessageEventNamesEnum.HANDSHAKE + JSON.stringify({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' })
       };
 
-      spyOn(PostMessageListener, '_onCustomMessage');
+      jest.spyOn(PostMessageListener, '_onCustomMessage').mockImplementation(() => { });
       tabUtils.tabs.push({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' });
       PostMessageListener.onNewTab(message);
 
@@ -170,7 +174,7 @@ describe('PostMessageListener', () => {
           PostMessageEventNamesEnum.ON_BEFORE_UNLOAD + JSON.stringify({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' })
       };
 
-      spyOn(PostMessageListener, '_onBeforeUnload');
+      jest.spyOn(PostMessageListener, '_onBeforeUnload').mockImplementation(() => { });
       tabUtils.tabs.push({ id: 'c88347f9-6600-4575-b4ab-18c33e0c2151' });
       PostMessageListener.onNewTab(message);
 

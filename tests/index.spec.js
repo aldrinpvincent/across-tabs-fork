@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import Parent from '../src/parent';
 import Child from '../src/child';
 

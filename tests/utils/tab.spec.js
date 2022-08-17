@@ -51,7 +51,7 @@ describe('tabUtils', () => {
 
   describe('method: _remove', () => {
     it('should remove tab from tab list', () => {
-      spyOn(arrayUtils, 'searchByKeyName');
+      jest.spyOn(arrayUtils, 'searchByKeyName').mockImplementation(() => {});
       tabUtils.tabs.push(mockedTab);
 
       expect(tabUtils.tabs.length).toBe(1);
@@ -64,7 +64,7 @@ describe('tabUtils', () => {
   });
   describe('method: _preProcessMessage', () => {
     it('should stringify msg sent', () => {
-      spyOn(JSON, 'stringify');
+      jest.spyOn(JSON, 'stringify').mockImplementation(() => {});
 
       tabUtils.config.stringify = JSON.stringify;
 
@@ -79,7 +79,7 @@ describe('tabUtils', () => {
         stringify: msg => (typeof msg === 'string' ? msg : `${msg}`)
       };
 
-      spyOn(custom, 'stringify');
+      jest.spyOn(custom, 'stringify').mockImplementation(() => {});
 
       tabUtils.config.stringify = custom.stringify;
 
@@ -174,7 +174,7 @@ describe('tabUtils', () => {
       tab2.id = 'bjjbnk32-d98e-4a2d-814c-9b07cb51059c';
       tab3.id = 'pi0dn3dd-d98e-4a2d-814c-9b07cb51059c';
 
-      spyOn(tab1.ref, 'close');
+      jest.spyOn(tab1.ref, 'close').mockImplementation(() => {});
 
       tabUtils.closeTab(tab1.id);
 
@@ -191,7 +191,7 @@ describe('tabUtils', () => {
       tab2.id = 'bjjbnk32-d98e-4a2d-814c-9b07cb51059c';
       tab3.id = 'pi0dn3dd-d98e-4a2d-814c-9b07cb51059c';
 
-      spyOn(tab1.ref, 'close');
+      jest.spyOn(tab1.ref, 'close').mockImplementation(() => {});
 
       tabUtils.closeAll(tab1.id);
 
@@ -215,7 +215,7 @@ describe('tabUtils', () => {
       let i,
         tabs = tabUtils.getOpened();
 
-      spyOn(tabs[0].ref.top, 'postMessage');
+      jest.spyOn(tabs[0].ref.top, 'postMessage').mockImplementation(() => {});
       tabUtils.broadCastAll('custom_message@12345');
 
       for (i = 0; i < tabs.length; i++) {
@@ -235,7 +235,7 @@ describe('tabUtils', () => {
       tab2.id = 'bjjbnk32-d98e-4a2d-814c-9b07cb51059c';
       tab3.id = 'pi0dn3dd-d98e-4a2d-814c-9b07cb51059c';
 
-      spyOn(tab1.ref.top, 'postMessage');
+      jest.spyOn(tab1.ref.top, 'postMessage').mockImplementation(() => {});
 
       tabUtils.broadCastTo(tab1.id, 'hello');
 
@@ -252,7 +252,7 @@ describe('tabUtils', () => {
       tab2.id = 'bjjbnk32-d98e-4a2d-814c-9b07cb51059c';
       tab3.id = 'pi0dn3dd-d98e-4a2d-814c-9b07cb51059c';
 
-      spyOn(tab1.ref.top, 'postMessage');
+      jest.spyOn(tab1.ref.top, 'postMessage').mockImplementation(() => {});
       tabUtils.sendMessage(tab1, 'hello');
       expect(tab1.ref.top.postMessage).toHaveBeenCalled();
     });
@@ -268,8 +268,8 @@ describe('tabUtils', () => {
 
       tab1.ref = [{ postMessage: function() {} }, { postMessage: function() {} }]; // mock length
 
-      spyOn(tab1.ref[1], 'postMessage');
-      spyOn(tab1.ref[0], 'postMessage');
+      jest.spyOn(tab1.ref[1], 'postMessage').mockImplementation(() => {});
+      jest.spyOn(tab1.ref[0], 'postMessage').mockImplementation(() => {});
       tabUtils.sendMessage(tab1, 'hello', true, 'Hey');
       expect(tab1.ref[1].postMessage).toHaveBeenCalled();
       expect(tab1.ref[0].postMessage).toHaveBeenCalled();

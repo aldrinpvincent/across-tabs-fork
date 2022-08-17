@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import tabUtils from '../src/utils/tab';
 import domUtils from '../src/utils/dom';
 
@@ -75,8 +78,8 @@ describe('Parent', () => {
         heartBeatInterval: 1000,
         shouldInitImmediately: false,
         removeClosedTabs: true,
-        onHandshakeCallback: function() {},
-        onPollingCallback: function() {}
+        onHandshakeCallback: function () { },
+        onPollingCallback: function () { }
       });
 
       expect(parent.heartBeatInterval).toBeDefined();
@@ -94,7 +97,7 @@ describe('Parent', () => {
 
   describe('method: addInterval', () => {
     it('should return if no opened tabs', () => {
-      spyOn(window, 'clearInterval');
+      jest.spyOn(window, 'clearInterval').mockImplementation(() => { });
 
       expect(parent.addInterval()).toBe(false);
       expect(window.clearInterval).toHaveBeenCalled();
@@ -106,7 +109,7 @@ describe('Parent', () => {
       tab2.status = 'close';
       tab3.status = 'close';
 
-      spyOn(window, 'clearInterval');
+      jest.spyOn(window, 'clearInterval').mockImplementation(() => { });
 
       expect(parent.addInterval()).toBe(false);
       expect(window.clearInterval).toHaveBeenCalled();
@@ -120,13 +123,13 @@ describe('Parent', () => {
 
       parent.removeClosedTabs = true;
 
-      spyOn(parent, 'watchStatus');
+      jest.spyOn(parent, 'watchStatus').mockImplementation(() => { });
       parent.addInterval();
       expect(parent.watchStatus).toHaveBeenCalled();
     });
     it('should call user-defined: onPollingCallback, if defined', () => {
       let parent = new Parent({
-        onPollingCallback: function() {}
+        onPollingCallback: function () { }
       });
 
       addTabs();
@@ -135,7 +138,7 @@ describe('Parent', () => {
       tab2.status = 'open';
       tab3.status = 'open';
 
-      spyOn(parent, 'onPollingCallback');
+      jest.spyOn(parent, 'onPollingCallback').mockImplementation(() => { });
       parent.addInterval();
       expect(parent.onPollingCallback).toHaveBeenCalled();
     });
@@ -172,7 +175,7 @@ describe('Parent', () => {
 
   describe('method: customEventUnListener', () => {
     it('should enable elements', () => {
-      spyOn(parent, 'enableElements');
+      jest.spyOn(parent, 'enableElements').mockImplementation(() => { });
 
       parent.customEventUnListener({
         detail: {
@@ -184,10 +187,10 @@ describe('Parent', () => {
     });
     it('should call handshake callback, if defined', () => {
       let parent = new Parent({
-        onHandshakeCallback: function() {}
+        onHandshakeCallback: function () { }
       });
 
-      spyOn(parent, 'onHandshakeCallback');
+      jest.spyOn(parent, 'onHandshakeCallback').mockImplementation(() => { });
 
       parent.customEventUnListener({
         detail: {
@@ -199,10 +202,10 @@ describe('Parent', () => {
     });
     it('should call user-defined callback, if defined', () => {
       let parent = new Parent({
-        onChildCommunication: function() {}
+        onChildCommunication: function () { }
       });
 
-      spyOn(parent, 'onChildCommunication');
+      jest.spyOn(parent, 'onChildCommunication').mockImplementation(() => { });
 
       parent.customEventUnListener({
         detail: {
@@ -216,10 +219,10 @@ describe('Parent', () => {
 
   describe('method: addEventListeners', () => {
     it('should attach listeners to window', () => {
-      let spy = jasmine.createSpy('message');
+      let spy = jest.fn();
 
-      spyOn(window, 'removeEventListener');
-      spyOn(window, 'addEventListener');
+      jest.spyOn(window, 'removeEventListener').mockImplementation(() => { });
+      jest.spyOn(window, 'addEventListener').mockImplementation(() => { });
 
       // postMessage runs asynchronously, verify after the message has been posted and after the event has been fired off.
       window.removeEventListener('message', e => {
@@ -344,7 +347,7 @@ describe('Parent', () => {
       tab2.status = 'open';
       tab3.status = 'close';
 
-      spyOn(tabUtils, 'broadCastAll');
+      jest.spyOn(tabUtils, 'broadCastAll').mockImplementation(() => { });
       parent.broadCastAll('custom_message');
 
       expect(tabUtils.broadCastAll).toHaveBeenCalledWith('custom_message');
@@ -358,7 +361,7 @@ describe('Parent', () => {
       tab2.status = 'open';
       tab3.status = 'close';
 
-      spyOn(tabUtils, 'broadCastTo');
+      jest.spyOn(tabUtils, 'broadCastTo').mockImplementation(() => { });
       parent.broadCastTo(tab1, 'custom_message');
 
       expect(tabUtils.broadCastTo).toHaveBeenCalledWith(tab1, 'custom_message');
@@ -376,7 +379,7 @@ describe('Parent', () => {
 
   describe('method: init', () => {
     it('should attach event listeners to window', () => {
-      spyOn(parent, 'addEventListeners');
+      jest.spyOn(parent, 'addEventListeners').mockImplementation(() => { });
       parent.init();
       expect(parent.addEventListeners).toHaveBeenCalled();
     });

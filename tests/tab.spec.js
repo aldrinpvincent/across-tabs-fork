@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import tabUtils from '../src/utils/tab';
 import UUID from '../src/vendor/uuid';
 import domUtils from '../src/utils/dom';
@@ -53,10 +57,10 @@ describe('Tab', () => {
 
   describe('method: create', () => {
     it('should set keys on `this`', () => {
-      spyOn(UUID, 'generate');
-      spyOn(window, 'open');
-      spyOn(domUtils, 'disable');
-      spyOn(tabUtils, 'addNew');
+      jest.spyOn(UUID, 'generate').mockImplementation(() => { });
+      jest.spyOn(window, 'open').mockImplementation(() => { });
+      jest.spyOn(domUtils, 'disable').mockImplementation(() => { });
+      jest.spyOn(tabUtils, 'addNew').mockImplementation(() => { });
 
       tab.create({
         url: 'http://abc.xyz'
