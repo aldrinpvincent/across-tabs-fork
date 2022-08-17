@@ -6,21 +6,40 @@ import WarningTextEnum from '../src/enums/WarningTextEnum';
 
 import Child from '../src/child';
 
-let child,
-  mockedTab = {
-    url: 'http://localhost:3000/example/child.html',
-    id: '57cd47da-d98e-4a2d-814c-9b07cb51059c',
-    name: 'heatmap1',
-    status: 'open',
-    ref: window
+const localStorageMock = (() => {
+  let store = new Map();
+  return {
+    getItem(key) {
+      if (store.has(key)) {
+        return store.get(key);
+      }
+      return null;
+    },
+    setItem(key, value) {
+      store.set(key, value);
+    },
+    clear() {
+      store.clear();
+    },
+    removeItem(key) {
+      store.delete(key);
+    }
   };
+})();
 
+Object.defineProperty(window, 'sessionStorage', {
+  value: localStorageMock
+});
+
+let child;
 describe('Child', () => {
   beforeEach(() => {
+    localStorageMock.clear();
     child = new Child();
   });
+
   afterEach(() => {
-    // ...
+    localStorageMock.clear();
   });
 
   describe('Basic tests', () => {
@@ -244,8 +263,9 @@ describe('Child', () => {
       expect(window.top.opener.postMessage).toHaveBeenCalled();
     });
   });
-  describe('method: getTabInfo', () => {
+  xdescribe('method: getTabInfo', () => {
     it('should return an object', () => {
+      console.log('child.getTabInfo() :>> ', child.getTabInfo());
       expect(child.getTabInfo()).toBeDefined();
       expect(child.getTabInfo().id).toBeDefined();
       expect(child.getTabInfo().name).toBeDefined();

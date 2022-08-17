@@ -100,7 +100,7 @@ class Child {
 
     // Expecting JSON data
     try {
-      actualData = this.config.parse(dataReceived);
+      actualData = this.config.parse(dataReceived || null);
       this.tabId = actualData && actualData.id;
       this.tabName = actualData && actualData.name;
       this.tabParentName = actualData && actualData.parentName;
